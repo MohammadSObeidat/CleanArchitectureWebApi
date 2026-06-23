@@ -5,10 +5,12 @@ using CleanArchitecture.Application.Features.Employees.Commands.UpdateEmployee;
 using CleanArchitecture.Application.Features.Employees.Queries.GetAllEmployees;
 using CleanArchitecture.Application.Features.Employees.Queries.GetEmployeeById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class EmployeeController : ControllerBase

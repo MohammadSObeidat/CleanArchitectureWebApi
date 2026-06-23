@@ -1,10 +1,12 @@
 ﻿using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Infrastructure.Configurations;
+using CleanArchitecture.Infrastructure.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Infrastructure.Data
 {
-    public class ITIContext : DbContext
+    public class ITIContext : IdentityDbContext<ApplicationUser> //DbContext
     {
         public DbSet<Department> Departments { get; set; }
         public DbSet<Employee> Employees { get; set; }

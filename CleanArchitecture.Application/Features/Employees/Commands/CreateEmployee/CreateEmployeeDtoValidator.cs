@@ -1,30 +1,31 @@
-﻿using FluentValidation;
+﻿using CleanArchitecture.Application.DTOs.Employee;
+using FluentValidation;
 
-namespace CleanArchitecture.Application.Features.Employees.Commands.UpdateEmployee
+namespace CleanArchitecture.Application.Features.Employees.Commands.CreateEmployee
 {
-    public class UpdateEmployeeCommandValidator : AbstractValidator<UpdateEmployeeCommand>
+    public class CreateEmployeeDtoValidator : AbstractValidator<CreateEmployeeDto>
     {
-        public UpdateEmployeeCommandValidator()
+        public CreateEmployeeDtoValidator()
         {
-            RuleFor(x => x.UpdateEmployeeDto.FirstName)
+            RuleFor(x => x.FirstName)
                 .NotEmpty()
                 .WithMessage("First name is required.")
                 .MaximumLength(100)
                 .WithMessage("First name cannot exceed 100 characters.");
 
-            RuleFor(x => x.UpdateEmployeeDto.LastName)
+            RuleFor(x => x.LastName)
                 .NotEmpty()
                 .WithMessage("Last name is required.")
                 .MaximumLength(100)
                 .WithMessage("Last name cannot exceed 100 characters.");
 
-            RuleFor(x => x.UpdateEmployeeDto.Salary)
+            RuleFor(x => x.Salary)
                 .GreaterThanOrEqualTo(0)
                 .WithMessage("Salary cannot be negative.")
                 .PrecisionScale(18, 2, false)
                 .WithMessage("Salary must have up to 18 digits and 2 decimal places.");
 
-            RuleFor(x => x.UpdateEmployeeDto.DepartmentId)
+            RuleFor(x => x.DepartmentId)
                 .GreaterThan(0)
                 .WithMessage("A valid department must be selected.");
         }

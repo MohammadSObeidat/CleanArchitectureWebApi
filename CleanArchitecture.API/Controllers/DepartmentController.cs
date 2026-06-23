@@ -5,10 +5,12 @@ using CleanArchitecture.Application.Features.Departments.Commands.UpdateDepartme
 using CleanArchitecture.Application.Features.Departments.Queries.GetAllDepartments;
 using CleanArchitecture.Application.Features.Departments.Queries.GetDepartmentById;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.API.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class DepartmentController : ControllerBase
