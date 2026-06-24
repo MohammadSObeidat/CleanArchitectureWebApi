@@ -10,8 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.API.Controllers
 {
-    [Authorize]
-    [Route("api/[controller]")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
@@ -22,22 +21,39 @@ namespace CleanArchitecture.API.Controllers
             this.mediator = mediator;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpGet]
-        public async Task<ActionResult<List<EmployeeDto>>> Get()
+        public async Task<ActionResult<List<EmployeeDto>>> Get(string? fullName, bool sortSalaryAscending = true)
         {
-            List<EmployeeDto> employees = await mediator.Send(new GetEmployeesQuery());
+            var query = new GetEmployeesQuery(fullName, sortSalaryAscending);
+
+            List <EmployeeDto> employees = await mediator.Send(query);
 
             return Ok(employees);
         }
 
+        [Authorize(Roles = "Admin, User")]
         [HttpGet("{id:int}")]
         public async Task<ActionResult<EmployeeDetailsDto>> Get(int id)
         {
+            /*
+            var authenticatedUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            var authenticatedUserRole = User.FindFirstValue(ClaimTypes.Role);
+
+            var query = new GetEmployeeByIdQuery(id, authenticatedUserId, authenticatedUserRole);
+
+            EmployeeDetailsDto employee = await mediator.Send(query);
+
+            return Ok(employee);
+            */
+
             EmployeeDetailsDto employee = await mediator.Send(new GetEmployeeByIdQuery(id));
 
             return Ok(employee);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<ActionResult<int>> Create([FromForm] CreateEmployeeDto createEmployeeDto)
         {
@@ -48,6 +64,7 @@ namespace CleanArchitecture.API.Controllers
             return CreatedAtAction(nameof(Get), new { id }, id);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> Update(int id, [FromForm] UpdateEmployeeDto updateEmployeeDto)
         {
@@ -58,6 +75,7 @@ namespace CleanArchitecture.API.Controllers
             return NoContent();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id:int}")]
         public async Task<IActionResult> Delete(int id)
         {

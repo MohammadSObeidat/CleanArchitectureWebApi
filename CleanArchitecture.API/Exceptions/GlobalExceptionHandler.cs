@@ -44,6 +44,13 @@ namespace CleanArchitecture.API.Exceptions
                     Status = StatusCodes.Status404NotFound
                 },
 
+                //ForbiddenAccessException ex => new ProblemDetails
+                //{
+                //    Title = "Access Denied",
+                //    Detail = ex.Message,
+                //    Status = StatusCodes.Status403Forbidden
+                //},
+
                 _ => new ProblemDetails
                 {
                     Title = "Server Error",

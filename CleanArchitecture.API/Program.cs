@@ -12,6 +12,7 @@ using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.RateLimiting;
+using System.Threading.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -151,18 +152,24 @@ builder.Services.AddCors(options =>
 });
 
 // Rate Limiting
-//builder.Services.AddRateLimiter(options =>
-//{
-//    options.AddFixedWindowLimiter("login", opt =>
-//    {
-//        opt.PermitLimit = 5;
-//        opt.Window = TimeSpan.FromMinutes(1);
-//        opt.QueueProcessingOrder = QueueProcessingOrder.OldestFirst;
-//        opt.QueueLimit = 0;
-//    });
-//});
+builder.Services.AddRateLimiter(options =>
+{
+    options.RejectionStatusCode = StatusCodes.Status429TooManyRequests;
 
+    options.AddPolicy("AuthLimiter", httpContext =>
+    {
+        var ip = httpContext.Connection.RemoteIpAddress?.ToString() ?? "Unknown";
 
+        return RateLimitPartition.GetFixedWindowLimiter(
+            partitionKey: ip,
+            factory: _ => new FixedWindowRateLimiterOptions
+            {
+                PermitLimit = 5,
+                Window = TimeSpan.FromMinutes(1),
+                QueueLimit = 0
+            });
+    });
+});
 
 // Global Exception Handler Middleware
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
@@ -207,6 +214,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseCors("ApiCorsPolicy");
+
+app.UseRateLimiter();
 
 app.UseAuthentication();
 

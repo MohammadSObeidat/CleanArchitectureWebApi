@@ -31,6 +31,29 @@ namespace CleanArchitecture.Application.Features.Employees.Queries.GetEmployeeBy
             EmployeeDetailsDto employeeDetailsDto = mapper.Map<EmployeeDetailsDto>(employee);
 
             return employeeDetailsDto;
+
+            /*
+            Employee? employee = await unitOfWork.Employees.GetByIdAsync(
+                e => e.Id == request.Id, e => e.Department);
+
+            if (employee is null)
+            {
+                throw new NotFoundException("Employee", request.Id);
+            }
+
+            // Ownership Logic
+            bool isOwner = employee.Id.ToString() == request.AuthenticatedUserId;
+            bool isAdmin = request.AuthenticatedUserRole == "Admin";
+
+            if (!isAdmin && !isOwner)
+            {
+                throw new ForbiddenAccessException(); // 403
+            }
+
+            EmployeeDetailsDto employeeDetailsDto = mapper.Map<EmployeeDetailsDto>(employee);
+
+            return employeeDetailsDto;
+            */
         }
     }
 }

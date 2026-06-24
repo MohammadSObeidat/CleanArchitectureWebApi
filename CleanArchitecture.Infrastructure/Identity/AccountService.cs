@@ -82,7 +82,7 @@ namespace CleanArchitecture.Infrastructure.Identity
                 return Result<AccountResponseDto>.Failure(validationResult.Errors.Select(e => e.ErrorMessage));
             }
 
-            // Check
+            // Check if user exists
             var user = await userManager.FindByEmailAsync(loginDto.Email);
 
             if (user is null)

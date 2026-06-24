@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CleanArchitecture.API.Controllers
 {
-    [Authorize]
-    [Route("api/[controller]")]
+    [Authorize(Roles ="Admin")]
+    [Route("api/v1/[controller]")]
     [ApiController]
     public class DepartmentController : ControllerBase
     {

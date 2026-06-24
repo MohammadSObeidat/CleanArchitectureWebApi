@@ -3,5 +3,7 @@ using MediatR;
 
 namespace CleanArchitecture.Application.Features.Employees.Queries.GetAllEmployees
 {
-    public sealed record GetEmployeesQuery() : IRequest<List<EmployeeDto>>;
+    public sealed record GetEmployeesQuery(
+        string? FullName,
+        bool SortSalaryAscending = true) : IRequest<List<EmployeeDto>>;
 }

@@ -1,9 +1,6 @@
 ﻿using CleanArchitecture.Application.DTOs.Account;
 using CleanArchitecture.Application.Interfaces;
-using CleanArchitecture.Infrastructure.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.RateLimiting;
 
@@ -34,7 +31,7 @@ namespace CleanArchitecture.API.Controllers
         }
 
         [HttpPost("login")]
-        //[EnableRateLimiting("login")]
+        [EnableRateLimiting("AuthLimiter")]
         public async Task<IActionResult> Login(LoginDto loginDto)
         {
             var result = await accountService.LoginAsync(loginDto);
@@ -47,8 +44,8 @@ namespace CleanArchitecture.API.Controllers
             return Ok(result.Value);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost("roles")]
-        //[Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateRole(CreateRoleDto createRoleDto)
         {
             var result = await accountService.CreateRoleAsync(createRoleDto);
